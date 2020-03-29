@@ -101,7 +101,12 @@ class PluginUtils {
         }
 
         // Remove classloader
-        Set<PluginClassloader> allLoaders = ReflectionUtils.getStaticFieldValue(PluginClassloader.class, "allLoaders");
+        Set allLoaders = null;
+        try {
+            allLoaders = ReflectionUtils.getStaticFieldValue(Class.forName("net.md_5.bungee.api.plugin.PluginClassloader"), "allLoaders");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
         Preconditions.checkNotNull(allLoaders);
         allLoaders.remove(pluginclassloader);
     }
@@ -134,7 +139,7 @@ class PluginUtils {
                 }
 
                 //load plugin
-                URLClassLoader loader = new PluginClassloader(new URL[]{pluginfile.toURI().toURL()});
+                URLClassLoader loader = (URLClassLoader) ReflectionUtils.createPluginClassloader(ProxyServer.getInstance(), desc, new URL[]{pluginfile.toURI().toURL()});
                 Class<?> mainclazz = loader.loadClass(desc.getMain());
                 Plugin plugin = (Plugin) mainclazz.getDeclaredConstructor().newInstance();
                 ReflectionUtils.invokeMethod(plugin, "init", ProxyServer.getInstance(), desc);

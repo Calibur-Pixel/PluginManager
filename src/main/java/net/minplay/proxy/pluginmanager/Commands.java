@@ -147,7 +147,7 @@ public class Commands extends Command implements TabExecutor {
                 }
 
                 if (PluginUtils.loadPlugin(file)) {
-                    sender.sendMessage(textWithColor("Invalid plugin", ChatColor.RED));
+                    sender.sendMessage(textWithColor(args[1] + " loaded successfully!", ChatColor.GREEN));
                 } else {
                     sender.sendMessage(textWithColor("Failed to load plugin, see console for more info", ChatColor.RED));
                 }

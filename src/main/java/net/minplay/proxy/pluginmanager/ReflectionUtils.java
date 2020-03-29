@@ -1,9 +1,19 @@
 package net.minplay.proxy.pluginmanager;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
+import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.plugin.PluginDescription;
+
+import java.lang.reflect.*;
+import java.net.URL;
 
 public class ReflectionUtils {
+    public static Object createPluginClassloader(ProxyServer proxy, PluginDescription desc, URL[] urls) throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
+        Class clazz = Class.forName("net.md_5.bungee.api.plugin.PluginClassloader");
+        Constructor constroctor = clazz.getConstructor(ProxyServer.class, PluginDescription.class, URL[].class);
+        constroctor.setAccessible(true);
+        Object obj = constroctor.newInstance(proxy, desc, urls);
+        return obj;
+    }
 
     @SuppressWarnings("unchecked")
     public static <T> T getFieldValue(Object obj, String fieldname) {
